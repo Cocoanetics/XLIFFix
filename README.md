@@ -4,4 +4,6 @@ Utility for recreating strings file from XLIFF. Build the command line utility a
 Usage:
 `XLIFFix path/to/lang.xliff`
 
-Creates a lang.lproj at the current location and places the reconstituted strings files from the XLIFF there.
+Creates a `.lproj` at the current location and places the reconstituted strings files from the XLIFF there.
+
+Input and/or pull requests welcome.
