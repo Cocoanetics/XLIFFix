@@ -46,7 +46,9 @@ private func writeFile(file: OriginalFile, toPath path: String) throws
 			tmpStr += "/* \(note) */\n"
 		}
 		
-		tmpStr += "\"\(identifier)\" = \"\(transUnit.target ?? "")\";\n"
+		// escape double quotes to be safe
+		let translation = (transUnit.target ?? "").stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
+		tmpStr += "\"\(identifier)\" = \"\(translation)\";\n"
 	}
 	
 	try (tmpStr as NSString).writeToFile(outputPath, atomically: true, encoding: NSUTF8StringEncoding);
