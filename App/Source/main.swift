@@ -9,13 +9,13 @@
 import Foundation
 
 
-private func writeFile(file: OriginalFile, toPath path: String) throws
+private func writeFile(_ file: OriginalFile, toPath path: String) throws
 {
-	let fileManager = NSFileManager.defaultManager()
+	let fileManager = FileManager.default
 	
-	if !fileManager.fileExistsAtPath(path)
+	if !fileManager.fileExists(atPath: path)
 	{
-		try fileManager.createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: nil)
+		try fileManager.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
 	}
 
 	let languageFolder = (path as NSString).lastPathComponent
@@ -26,9 +26,9 @@ private func writeFile(file: OriginalFile, toPath path: String) throws
 	}
 	
 	let fileName = (name as NSString).lastPathComponent
-	let justName = (fileName as NSString).stringByDeletingPathExtension
+	let justName = (fileName as NSString).deletingPathExtension
 	let outputName = justName + ".strings"
-	let outputPath = (path as NSString).stringByAppendingPathComponent(outputName)
+	let outputPath = (path as NSString).appendingPathComponent(outputName)
 	
 	var tmpStr = ""
 	
@@ -47,30 +47,30 @@ private func writeFile(file: OriginalFile, toPath path: String) throws
 		}
 		
 		// escape double quotes to be safe
-		let translation = (transUnit.target ?? "").stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
+		let translation = (transUnit.target ?? "").replacingOccurrences(of: "\"", with: "\\\"")
 		tmpStr += "\"\(identifier)\" = \"\(translation)\";\n"
 	}
 	
-	try (tmpStr as NSString).writeToFile(outputPath, atomically: true, encoding: NSUTF8StringEncoding);
+	try (tmpStr as NSString).write(toFile: outputPath, atomically: true, encoding: String.Encoding.utf8.rawValue);
 	
 	print("\(languageFolder)\t\(outputName) ✓")
 }
 
 
-if Process.argc<2
+if CommandLine.argc<2
 {
 	print("Usage: XLIFFix <file>\n")
 	exit(1)
 }
 
-let args = Process.arguments
-let filemgr = NSFileManager.defaultManager()
+let args = CommandLine.arguments
+let filemgr = FileManager.default
 let currentPath = filemgr.currentDirectoryPath
 
-for i in 1..<Process.argc {
-	let fileName = Process.arguments[Int(i)]
+for i in 1..<CommandLine.argc {
+	let fileName = CommandLine.arguments[Int(i)]
 	
-	guard let data = NSData(contentsOfFile: fileName)
+	guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileName))
 		else
 	{
 		print("Cannot load data at path \(fileName)")
@@ -93,7 +93,7 @@ for i in 1..<Process.argc {
 			}
 			
 			let languageFolder = language + ".lproj"
-			let outputPath = (currentPath as NSString).stringByAppendingPathComponent(languageFolder)
+			let outputPath = (currentPath as NSString).appendingPathComponent(languageFolder)
 			
 			try writeFile(file, toPath: outputPath)
 		}

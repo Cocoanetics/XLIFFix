@@ -8,7 +8,7 @@
 
 import Foundation
 
-class XLIFFParser: NSObject, NSXMLParserDelegate {
+class XLIFFParser: NSObject, XMLParserDelegate {
 	
 	var currentFile: OriginalFile?
 	var currentTransUnit: TransUnit?
@@ -16,11 +16,11 @@ class XLIFFParser: NSObject, NSXMLParserDelegate {
 	
 	internal var files: [OriginalFile] = []
 
-	init?(data: NSData)
+	init?(data: Data)
 	{
 		super.init()
 		
-		let parser = NSXMLParser(data: data)
+		let parser = XMLParser(data: data)
 		parser.delegate = self
 		
 		guard parser.parse()
@@ -32,7 +32,7 @@ class XLIFFParser: NSObject, NSXMLParserDelegate {
 	
 	// MARK: - NSXMLParserDelegate
 	
-	func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String])
+	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String])
 	{
 		if (elementName == "file")
 		{
@@ -59,7 +59,7 @@ class XLIFFParser: NSObject, NSXMLParserDelegate {
 		currentString = ""
 	}
 	
-	func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?)
+	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?)
 	{
 		if (elementName == "file")
 		{
@@ -86,7 +86,7 @@ class XLIFFParser: NSObject, NSXMLParserDelegate {
 		currentString = ""
 	}
 	
-	func parser(parser: NSXMLParser, foundCharacters string: String)
+	func parser(_ parser: XMLParser, foundCharacters string: String)
 	{
 		currentString! += string
 	}

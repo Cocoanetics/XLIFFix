@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class TransUnit: NSObject
+open class TransUnit: NSObject
 {
 	var attributeDict: [String : String]?
 	
