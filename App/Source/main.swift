@@ -47,7 +47,7 @@ private func writeFile(_ file: OriginalFile, toPath path: String) throws
 		}
 		
 		// escape double quotes to be safe
-		let translation = (transUnit.target ?? "").replacingOccurrences(of: "\"", with: "\\\"")
+		let translation = (transUnit.target ?? transUnit.source ?? "").replacingOccurrences(of: "\"", with: "\\\"")
 		tmpStr += "\"\(identifier)\" = \"\(translation)\";\n"
 	}
 	
