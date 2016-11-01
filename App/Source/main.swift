@@ -57,17 +57,17 @@ private func writeFile(_ file: OriginalFile, toPath path: String) throws
 }
 
 
-if CommandLine.argc<2
+if CommandLine.argc<3
 {
-	print("Usage: XLIFFix <file>\n")
+	print("Usage: XLIFFix <output_dir> <file>\n")
 	exit(1)
 }
 
 let args = CommandLine.arguments
 let filemgr = FileManager.default
-let currentPath = filemgr.currentDirectoryPath
+let outputDirectory = CommandLine.arguments[1]
 
-for i in 1..<CommandLine.argc {
+for i in 2..<CommandLine.argc {
 	let fileName = CommandLine.arguments[Int(i)]
 	
 	guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileName))
@@ -93,7 +93,7 @@ for i in 1..<CommandLine.argc {
 			}
 			
 			let languageFolder = language + ".lproj"
-			let outputPath = (currentPath as NSString).appendingPathComponent(languageFolder)
+			let outputPath = (outputDirectory as NSString).appendingPathComponent(languageFolder)
 			
 			try writeFile(file, toPath: outputPath)
 		}
